@@ -255,6 +255,11 @@ function renderStatus(payload) {
   if (payload.embed_error) {
     keyStatus.textContent = payload.embed_error;
   }
+  const vercelNote = document.querySelector("#vercel-note");
+  if (payload.vercel) {
+    vercelNote.hidden = false;
+    vercelNote.textContent = "On Vercel, set OPENAI_API_KEY in the project environment variables and redeploy. A key pasted here lasts only for this running instance. Uploaded files do too. The Ranger documents stay.";
+  }
   const documents = payload.documents || [];
   docList.replaceChildren();
   documents.filter((doc) => !doc.uploaded).forEach((doc) => {

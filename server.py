@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import queue
 import threading
 from contextlib import asynccontextmanager
@@ -56,7 +57,9 @@ def index() -> FileResponse:
 
 @app.get("/api/status")
 def status() -> dict:
-    return kb.status()
+    payload = kb.status()
+    payload["vercel"] = bool(os.getenv("VERCEL"))
+    return payload
 
 
 @app.post("/api/settings")
@@ -151,7 +154,11 @@ async def chat(body: ChatBody) -> StreamingResponse:
                 yield _sse({"type": "done"})
                 break
 
-    return StreamingResponse(generate(), media_type="text/event-stream")
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 def _public_hit(hit: dict) -> dict:

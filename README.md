@@ -17,6 +17,16 @@ Open http://127.0.0.1:8000.
 
 Put your key in `.env` before starting, or paste it into the page and choose **Save key and embed**. Chat and embedding model names can be changed with `OPENAI_CHAT_MODEL` and `OPENAI_EMBEDDING_MODEL`.
 
+## Host on Vercel
+
+The app is a FastAPI server, which Vercel runs as one function. `server.py` is the entrypoint. The Ranger documents in `data/raw` are bundled with the deployment, and the lexical index is built when the function starts.
+
+1. Import [the GitHub repository](https://github.com/Shubham96681/lexical-search-bot) at [vercel.com/new](https://vercel.com/new).
+2. Add `OPENAI_API_KEY` under Project Settings → Environment Variables, then redeploy. Embeddings and written answers use that key on every instance.
+3. Uploaded files are stored in temporary disk and disappear when that instance stops. The bundled Ranger corpus remains.
+
+A key pasted into the page is kept only in that running instance.
+
 ## Your documents
 
 Use **Your documents** in the sidebar to upload text, Markdown, CSV, JSON, HTML, PDF, or Word files, up to 10 MB each. They are indexed with the Ranger corpus. Lexical search includes them immediately. If an OpenAI key is already saved, their embeddings are rebuilt too. Uploaded files stay in `data/uploads` and are not committed.

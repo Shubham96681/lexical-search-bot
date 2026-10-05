@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 
 from kb.corpus import ROOT, _policy_file_chunks, _prose_chunks, html_to_text
 
-UPLOAD_DIR = ROOT / "data" / "uploads"
+# Vercel functions can write only under /tmp, and that disk disappears when the instance stops.
+UPLOAD_DIR = Path("/tmp/kb-uploads") if os.getenv("VERCEL") else ROOT / "data" / "uploads"
 ALLOWED = {".txt", ".md", ".markdown", ".csv", ".json", ".html", ".htm", ".pdf", ".docx"}
 MAX_BYTES = 10 * 1024 * 1024
 
