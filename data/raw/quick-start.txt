@@ -1,0 +1,69 @@
+Quick Start Guide
+Bring up Apache Ranger in minutes using Docker ...
+Please follow the instruction provided at
+Wiki Page for Running Apache Ranger
+Build Process
+1. Check out the code from GIT repository
+git clone https://gitbox.apache.org/repos/asf/ranger.git
+cd ranger
+Alternatively, you can checkout the code from github:
+git clone https://github.com/apache/ranger
+cd ranger
+2. Please execute the following Maven command:
+$ export JAVA_HOME=%jdk 7 Home%
+$ mvn -Pall clean
+$ mvn -Pall -DskipTests=false clean compile package install
+3. After the above build command execution, you should see the following TAR files in the target folder:
+ranger-%version-number%-%module-name%.tar.gz
+Create an Apache Release
+1. Checkout from ranger release branch
+$ git checkout ranger-%version%
+2. Run maven commands to build and validate the build is working fine (See Build Process: step 2):
+$ export JAVA_HOME=%jdk 7 Home%
+$ mvn -Pall clean
+$ mvn -Pall -DskipTests=false clean compile package install
+3. Clean all generated files for building the source build
+$ mvn -Pall clean
+4. Create a TAR source file using the following command:
+$ ant -f release-build.xml -Dranger-release-version=%version-number%
+5. Now, the following files are ready to be published for release:
+./target/apache-ranger-%version-number%.tar.gz
+./target/apache-ranger-%version-number%.tar.gz.asc
+./target/apache-ranger-%version-number%.tar.gz.mds
+Verifying Build (also called as a Release)
+1. Download the release source file, apache-ranger-%version-number%.tar.gz (from URL provided in the release email)
+2. Download the PGP signature for, apache-ranger-%version-number%.tar.gz which usaully named as apache-ranger-%version-number%.tar.gz.asc (from URL provided in the release email)
+3. Get the keys used to sign the releases for verification. https://dist.apache.org/repos/dist/release/ranger/KEYS
+$ gpg --import KEYS
+$ gpg --fingerprint key-id
+4. Execute the following command to verify the release
+$ gpg --verify apache-ranger-%version-number%.tar.gz.asc apache-ranger-%version-number%.tar.gz
+5. Download MD5/SHA hash for apache-ranger-%version-number%.tar.gz which usaully named as apache-ranger-%version-number%.tar.gz.mds (from URL provided in the release email)
+$ gpg --print-mds apache-ranger-%version-number%.tar.gz
+Compare MD5, SHA hash generated from the above command and the signature available in the apache-ranger-%version-number%.tar.gz.mds.
+Importing Apache Ranger Project into Eclipse
+1. Create a Eclipse workspace called 'ranger'
+2. Import maven project from the root directory where ranger source code is downloaded and build using the following command:
+$ export JAVA_HOME=%Jdk 7 Home%
+$ mvn -Pall clean
+$ mvn -Pall -DskipTests=false clean compile package install
+$ mvn eclipse:eclipse
+Deployment Process
+Installation Host Information
+1. Ranger Admin Tool Component (ranger-%version-number%-admin.tar.gz) should be installed on a host where Policy Admin Tool web application runs on port 6080 (default).
+2. Ranger User Synchronization Component (ranger-%version-number%-usersync.tar.gz) should be installed on a host to synchronize the external user/group information into Ranger database via Ranger Admin Tool.
+3. Ranger Component plugin should be installed on the component boxes:
+(a) HDFS Plugin needs to be installed on Name Node hosts
+(b) Hive Plugin needs to be installed on HiveServer2 hosts
+(c) HBase Plugin needs to be installed on both Master and Regional Server nodes.
+(d) Knox Plugin needs to be installed on Knox hosts.
+(e) Storm Plugin needs to be installed on Storm hosts.
+Installation Process
+1. Download the tar.gz file into a temporary folder in the box where it needs to be installed.
+2. Expand the tar.gz file into /usr/lib/ranger/ folder
+3. Go to the component name under the expanded folder (e.g. /usr/lib/ranger/ranger-%version-number%-admin/)
+4. Modify the install.properties file with appropriate variables
+5. If the module has setup.sh,
+Execute ./setup.sh
+If the setup.sh file does not exists,
+Execute ./enable-%component%-plugin.sh

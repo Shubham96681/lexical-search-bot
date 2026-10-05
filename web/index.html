@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranger knowledge base</title>
+  <link rel="stylesheet" href="/static/styles.css?v=6" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <p class="eyebrow">Apache Ranger</p>
+        <h1>Policy desk</h1>
+        <p class="lede">Lexical search plus OpenAI embeddings, held in an in-memory vector index.</p>
+      </div>
+
+      <section class="panel">
+        <h2>OpenAI</h2>
+        <label for="api-key">API key</label>
+        <input id="api-key" type="password" autocomplete="off" placeholder="sk-..." />
+        <label for="chat-model">Chat model</label>
+        <select id="chat-model">
+          <option value="gpt-4.1-mini" selected>gpt-4.1-mini</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-4o">gpt-4o</option>
+        </select>
+        <button id="save-key" type="button">Save key and embed</button>
+        <p id="key-status" class="hint">The key stays in this server process. You can also put it in a <code>.env</code> file and restart.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Your documents</h2>
+        <label for="file-input">Add files</label>
+        <input id="file-input" type="file" multiple accept=".txt,.md,.markdown,.csv,.json,.html,.htm,.pdf,.docx,text/plain,application/pdf" />
+        <button id="upload-button" type="button">Upload and index</button>
+        <p id="upload-status" class="hint">Text, Markdown, CSV, JSON, HTML, PDF, or Word. Up to 10 MB each. They are searched with the Ranger documents.</p>
+        <ul id="upload-list" class="doc-list"></ul>
+      </section>
+
+      <section class="panel status-panel">
+        <h2>Index</h2>
+        <ul id="status-list" class="status-list"></ul>
+      </section>
+
+      <section class="panel docs-panel">
+        <h2>Corpus</h2>
+        <ul id="doc-list" class="doc-list"></ul>
+      </section>
+    </aside>
+
+    <main class="chat">
+      <header class="chat-head">
+        <div>
+          <p class="eyebrow">Hybrid retrieval</p>
+          <h2>Ask the policy corpus</h2>
+        </div>
+        <p id="retrieval-mode" class="mode">Waiting for a question</p>
+      </header>
+
+      <div id="transcript" class="transcript" aria-live="polite">
+        <article class="message assistant">
+          <p>Ask about Ranger access, masking, row filters, or tag policies. Answers are written in plain language. Open a source if you want the original passage.</p>
+        </article>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <button type="button" data-prompt="Who can read the HDFS path /tmp/tmpdir?">Who can read /tmp/tmpdir?</button>
+        <button type="button" data-prompt="Which users can select from Hive database db1 tables matching tbl*?">Hive select on db1.tbl*</button>
+        <button type="button" data-prompt="What is the difference between resource policies and tag-based policies in Apache Ranger?">Resource vs tag policies</button>
+        <button type="button" data-prompt="How do row filters and data masking policies work in Ranger?">Row filters and masking</button>
+      </div>
+
+      <form id="composer" class="composer">
+        <textarea id="question" rows="2" placeholder="Ask about a policy, user, path, or Ranger concept" required></textarea>
+        <button id="send" type="submit">Ask</button>
+      </form>
+    </main>
+  </div>
+  <script src="/static/app.js?v=6"></script>
+</body>
+</html>
